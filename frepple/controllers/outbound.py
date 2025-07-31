@@ -831,7 +831,7 @@ class exporter(object):
                         "%s%s"
                         % (
                             (
-                                ("%s/" % self.category_parent(tmpl["categ_id"][1]))
+                                ("%s/" % self.category_parent.get(tmpl["categ_id"][1]))
                                 if tmpl["categ_id"][1] in self.category_parent
                                 else ""
                             ),
