@@ -821,31 +821,17 @@ class exporter(object):
                 prod_obj = {"name": name, "template": i["product_tmpl_id"][0]}
                 self.product_product[i["id"]] = prod_obj
                 self.product_template_product[i["product_tmpl_id"][0]] = prod_obj
-                yield '<item name=%s cost="%f" category=%s subcategory="%s,%s"%s>\n' % (
-                    quoteattr(name),
-                    (tmpl["list_price"] or 0)
-                    / self.convert_qty_uom(
-                        1.0, tmpl["uom_id"][0], i["product_tmpl_id"][0]
-                    ),
-                    quoteattr(
-                        "%s%s"
-                        % (
-                            (
-                                ("%s/" % self.category_parent.get(tmpl["categ_id"][1]))
-                                if tmpl["categ_id"][1] in self.category_parent
-                                else ""
-                            ),
-                            tmpl["categ_id"][1],
-                        )
-                    ),
-                    self.uom_categories[self.uom[tmpl["uom_id"][0]]["category"]],
-                    i["id"],
-                    (
-                        ' type="item_mto"'
-                        if True  # i["product_tmpl_id"][0] in mto_template_products
-                        else ""
-                    ),
+                cost = (tmpl["list_price"] or 0) / self.convert_qty_uom(
+                    1.0, tmpl["uom_id"][0], i["product_tmpl_id"][0]
                 )
+                uom_id = self.uom_categories[self.uom[tmpl["uom_id"][0]]["category"]]
+                left = (
+                    ("%s/" % self.category_parent.get(tmpl["categ_id"][1]))
+                    if tmpl["categ_id"][1] in self.category_parent
+                    else ""
+                )
+                category = quoteattr(f'{left}{tmpl["categ_id"][1]}')
+                yield f'<item name={quoteattr(name)} cost="{cost}" category={category} subcategory="{uom_id},{i["id"]}" type="item_mto">\n'
                 # Export suppliers for the item, if the item is allowed to be purchased
                 if tmpl["purchase_ok"]:
                     try:
