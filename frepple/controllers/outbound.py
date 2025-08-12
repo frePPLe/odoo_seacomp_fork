@@ -826,8 +826,9 @@ class exporter(object):
                 )
                 uom_id = self.uom_categories[self.uom[tmpl["uom_id"][0]]["category"]]
                 left = (
-                    ("%s/" % self.category_parent.get(tmpl["categ_id"][1]))
-                    if tmpl["categ_id"][1] in self.category_parent
+                    ("%s/" % self.category_parent.get(tmpl["categ_id"][1])[1])
+                    if tmpl["categ_id"]
+                    and self.category_parent.get(tmpl["categ_id"][1])
                     else ""
                 )
                 category = quoteattr(f'{left}{tmpl["categ_id"][1]}')
